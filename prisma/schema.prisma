@@ -1,0 +1,229 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  nome         String
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  carteiras CarteiraSimulada[]
+
+  @@map("users")
+}
+
+model Empresa {
+  ticker       String @id
+  nome         String
+  setor        String?
+  industria    String?
+  volumeMedio  BigInt? @map("volume_medio")
+  ativa        Boolean @default(true)
+  // Cacheados pelo cron de 5min (syncCotacoes), que ja busca quote() por outro motivo.
+  // Alimentam a seta de alta/queda do dashboard sem nenhuma chamada de API extra.
+  ultimoPreco           Float? @map("ultimo_preco")
+  variacaoDiaPercentual Float? @map("variacao_dia_percentual")
+
+  dadosTrimestrais     DadosTrimestrais[]
+  cotacoesHistoricas   CotacaoHistorica[]
+  indicadoresCalculados IndicadorCalculado[]
+  zscoreResultados     ZScoreResultado[]
+  carteiraAtivos       CarteiraAtivo[]
+  transacoes           Transacao[]
+
+  @@map("empresas")
+}
+
+model DadosTrimestrais {
+  id             String   @id @default(uuid())
+  ticker         String
+  dataReferencia DateTime @map("data_referencia")
+  tipo           String   @default("quarterly")
+
+  totalAssets                          BigInt? @map("total_assets")
+  commonStockEquity                    BigInt? @map("common_stock_equity")
+  stockholdersEquity                   BigInt? @map("stockholders_equity")
+  totalDebt                            BigInt? @map("total_debt")
+  totalLiabilitiesNetMinorityInterest  BigInt? @map("total_liabilities")
+  currentAssets                        BigInt? @map("current_assets")
+  currentLiabilities                   BigInt? @map("current_liabilities")
+  // Gravado como o Yahoo publica (Ativo Circ. - Passivo Circ.), mas NAO usado pelo
+  // modelo: e a definicao contabil bruta, que inclui caixa e divida. Ver capitalDeGiro().
+  workingCapital                       BigInt? @map("working_capital")
+  accumulatedDepreciation              BigInt? @map("accumulated_depreciation")
+  cashAndCashEquivalents               BigInt? @map("cash_and_equivalents")
+  // Caixa + aplicacoes financeiras e divida de curto prazo entram na definicao
+  // operacional de capital de giro (Sloan, 1996), adotada por CFOA e ACC.
+  cashAndShortTermInvestments          BigInt? @map("cash_and_short_term_investments")
+  currentDebt                          BigInt? @map("current_debt")
+  // Dividendo/JCP declarado e ainda nao pago. Fica no Passivo Circulante e, sem ser
+  // retirado, faz a distribuicao aparecer no CFOA como geracao de caixa operacional.
+  dividendsPayable                     BigInt? @map("dividends_payable")
+
+  totalRevenue                         BigInt? @map("total_revenue")
+  operatingRevenue                     BigInt? @map("operating_revenue")
+  costOfRevenue                        BigInt? @map("cost_of_revenue")
+  grossProfit                          BigInt? @map("gross_profit")
+  operatingIncome                      BigInt? @map("operating_income")
+  ebit                                 BigInt? @map("ebit")
+  ebitda                               BigInt? @map("ebitda")
+  netIncome                            BigInt? @map("net_income")
+  depreciationAmortizationDepletion    BigInt? @map("depreciation_amortization")
+  interestExpense                      BigInt? @map("interest_expense")
+
+  operatingCashFlow                    BigInt? @map("operating_cash_flow")
+  capitalExpenditure                   BigInt? @map("capital_expenditure")
+  freeCashFlow                         BigInt? @map("free_cash_flow")
+  changeInWorkingCapital               BigInt? @map("change_in_working_capital")
+
+  dadosCompletos Json?
+
+  empresa   Empresa @relation(fields: [ticker], references: [ticker])
+
+  @@unique([ticker, dataReferencia, tipo])
+  @@map("dados_trimestrais")
+}
+
+model CotacaoHistorica {
+  id        String   @id @default(uuid())
+  ticker    String
+  data      DateTime
+  adjclose  Float?
+  // "mensal"   = serie historica do yahoo (usada pelo MOM2-12)
+  // "intraday" = snapshot de preco atual gravado pelo cron de 5 minutos
+  // Sem essa separacao o snapshot contamina a serie mensal do momento.
+  tipo      String   @default("mensal")
+
+  empresa Empresa @relation(fields: [ticker], references: [ticker])
+
+  @@unique([ticker, data, tipo])
+  @@map("cotacoes_historicas")
+}
+
+// Serie de indices de mercado (Ibovespa). Fica fora de CotacaoHistorica porque
+// aquela tabela tem FK obrigatoria para Empresa, e cadastrar o indice como
+// empresa o faria aparecer em todo findMany({ where: { ativa: true } }).
+model CotacaoIndice {
+  id         String   @id @default(uuid())
+  simbolo    String
+  data       DateTime
+  fechamento Float
+
+  @@unique([simbolo, data])
+  @@map("cotacoes_indices")
+}
+
+model IndicadorCalculado {
+  id             String   @id @default(uuid())
+  ticker         String
+  dataReferencia DateTime @map("data_referencia")
+
+  roa   Float?
+  roe   Float?
+  gpoa  Float?
+  gmar  Float?
+  cfoa  Float?
+  acc   Float?
+  bab   Float?
+  lev   Float?
+  evol  Float?
+  beMe  Float? @map("be_me")
+  mom2  Float? @map("mom2_12")
+
+  crescRoa   Float? @map("cresc_roa")
+  crescRoe   Float? @map("cresc_roe")
+  crescGpoa  Float? @map("cresc_gpoa")
+  crescGmar  Float? @map("cresc_gmar")
+  crescCfoa  Float? @map("cresc_cfoa")
+
+  empresa Empresa @relation(fields: [ticker], references: [ticker])
+
+  @@unique([ticker, dataReferencia])
+  @@map("indicadores_calculados")
+}
+
+model ZScoreResultado {
+  id          String   @id @default(uuid())
+  ticker      String
+  dataCalculo DateTime @default(now()) @map("data_calculo")
+
+  zLucratividade   Float?
+  zCrescimento     Float?
+  zSeguranca       Float?
+  zQualidade       Float?
+  zValor           Float?
+  zMomento         Float?
+  zValorMomento    Float?
+
+  classificacaoQualidade String? @map("classificacao_qualidade")
+  sinalVM                String? @map("sinal_vm")
+
+  empresa Empresa @relation(fields: [ticker], references: [ticker])
+
+  @@unique([ticker, dataCalculo])
+  @@map("zscore_resultados")
+}
+
+model CarteiraSimulada {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  nome            String
+  capitalInicial  Float    @map("capital_inicial")
+  saldoDisponivel Float    @default(0) @map("saldo_disponivel")
+  ativa           Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user        User            @relation(fields: [userId], references: [id])
+  ativos      CarteiraAtivo[]
+  transacoes  Transacao[]
+
+  @@map("carteiras_simuladas")
+}
+
+model CarteiraAtivo {
+  id         String   @id @default(uuid())
+  carteiraId String   @map("carteira_id")
+  ticker     String
+  quantidade Float
+  precoMedio Float    @map("preco_medio")
+  dataCompra DateTime @default(now()) @map("data_compra")
+
+  carteira CarteiraSimulada @relation(fields: [carteiraId], references: [id])
+  empresa  Empresa          @relation(fields: [ticker], references: [ticker])
+
+  @@unique([carteiraId, ticker])
+  @@map("carteira_ativos")
+}
+
+model Transacao {
+  id         String   @id @default(uuid())
+  carteiraId String   @map("carteira_id")
+  ticker     String
+  tipo       String
+  quantidade Float
+  preco      Float
+  // Snapshot do sinal de Valor e Momento no instante da transacao. Nao e FK: o sinal
+  // e reclassificado periodicamente e o historico precisa preservar o valor da epoca.
+  sinalVM    String?  @map("sinal_vm")
+  data       DateTime @default(now())
+
+  carteira CarteiraSimulada @relation(fields: [carteiraId], references: [id])
+  empresa  Empresa          @relation(fields: [ticker], references: [ticker])
+
+  @@map("transacoes")
+}
+
+model CronStatus {
+  jobName        String   @id @map("job_name")
+  ultimaExecucao DateTime @map("ultima_execucao")
+  status         String   @default("ok")
+
+  @@map("cron_status")
+}

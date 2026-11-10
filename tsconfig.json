@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "sourceMap": true,
+    "paths": {
+      "@shared/*": ["./src/shared/*"],
+      "@infra/*": ["./src/infra/*"],
+      "@dados/*": ["./src/dados/*"],
+      "@modelos/*": ["./src/modelos/*"],
+      "@conhecimento/*": ["./src/conhecimento/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/__fixtures__/**"]
+}

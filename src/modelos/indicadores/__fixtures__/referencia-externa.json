@@ -1,0 +1,954 @@
+{
+    "entradas":  [
+                     {
+                         "ticker":  "ABEV3.SA",
+                         "nome":  "Ambev S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  138209000000,
+                                           "patrimonioLiquido":  88313200000,
+                                           "lucroLiquidoLTM":  null,
+                                           "receitaLTM":  88268308000,
+                                           "cpvLTM":  42454258000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.184,
+                                            "roa":  0.11755312606270214,
+                                            "gmar":  0.519
+                                        }
+                     },
+                     {
+                         "ticker":  "AGRO3.SA",
+                         "nome":  "BrasilAgro - Companhia Brasileira de Propriedades Agrícolas",
+                         "janela":  "2T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  3706838000,
+                                           "patrimonioLiquido":  2025309000,
+                                           "lucroLiquidoLTM":  null,
+                                           "receitaLTM":  868288000,
+                                           "cpvLTM":  682284000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -0.044000000000000004,
+                                            "roa":  -0.024281868114080996,
+                                            "gmar":  0.10400000000000001
+                                        }
+                     },
+                     {
+                         "ticker":  "ASAI3.SA",
+                         "nome":  "Sendas Distribuidora S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  46631000000,
+                                           "patrimonioLiquido":  6346000000,
+                                           "lucroLiquidoLTM":  965000000,
+                                           "receitaLTM":  77566000000,
+                                           "cpvLTM":  63564000000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.152,
+                                            "roa":  0.020694387853573804,
+                                            "gmar":  0.18100000000000002
+                                        }
+                     },
+                     {
+                         "ticker":  "AURE3.SA",
+                         "nome":  "Auren Energia S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  46710105000,
+                                           "patrimonioLiquido":  11507333000,
+                                           "lucroLiquidoLTM":  -1089423000,
+                                           "receitaLTM":  13469154000,
+                                           "cpvLTM":  11710432000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -0.095,
+                                            "roa":  -0.023323007229699787,
+                                            "gmar":  0.131
+                                        }
+                     },
+                     {
+                         "ticker":  "AZZA3.SA",
+                         "nome":  "Azzas 2154 S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  15052655000,
+                                           "patrimonioLiquido":  8040341000,
+                                           "lucroLiquidoLTM":  324176000,
+                                           "receitaLTM":  11365137000,
+                                           "cpvLTM":  5159340000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.04,
+                                            "roa":  0.021536069940940827,
+                                            "gmar":  0.546
+                                        }
+                     },
+                     {
+                         "ticker":  "BRAV3.SA",
+                         "nome":  "Brava Energia S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  41662503000,
+                                           "patrimonioLiquido":  12282477000,
+                                           "lucroLiquidoLTM":  54457000,
+                                           "receitaLTM":  12338901000,
+                                           "cpvLTM":  8900809000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.004,
+                                            "roa":  0.0013070987098709871,
+                                            "gmar":  0.27899999999999997
+                                        }
+                     },
+                     {
+                         "ticker":  "CMIN3.SA",
+                         "nome":  "CSN Mineração S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  33847438000,
+                                           "patrimonioLiquido":  7339411000,
+                                           "lucroLiquidoLTM":  2333063000,
+                                           "receitaLTM":  17392874000,
+                                           "cpvLTM":  9375734000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.318,
+                                            "roa":  0.068928780349450769,
+                                            "gmar":  0.461
+                                        }
+                     },
+                     {
+                         "ticker":  "CPLE3.SA",
+                         "nome":  "Companhia Paranaense de Energia - COPEL",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  61646227000,
+                                           "patrimonioLiquido":  24128112000,
+                                           "lucroLiquidoLTM":  3190475000,
+                                           "receitaLTM":  27985378000,
+                                           "cpvLTM":  21463732000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.13,
+                                            "roa":  0.050840603313748456,
+                                            "gmar":  0.23399999999999999
+                                        }
+                     },
+                     {
+                         "ticker":  "CSAN3.SA",
+                         "nome":  "Cosan S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  126694332000,
+                                           "patrimonioLiquido":  4968466000,
+                                           "lucroLiquidoLTM":  -8892039000,
+                                           "receitaLTM":  40083074000,
+                                           "cpvLTM":  26269696000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -1.79,
+                                            "roa":  -0.070185170568456287,
+                                            "gmar":  0.345
+                                        }
+                     },
+                     {
+                         "ticker":  "CSNA3.SA",
+                         "nome":  "Companhia Siderúrgica Nacional",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  100602031000,
+                                           "patrimonioLiquido":  12166332000,
+                                           "lucroLiquidoLTM":  -2626882000,
+                                           "receitaLTM":  45106972000,
+                                           "cpvLTM":  null
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -0.21600000000000003,
+                                            "roa":  -0.02611160811912288,
+                                            "gmar":  0.27899999999999997
+                                        }
+                     },
+                     {
+                         "ticker":  "CVCB3.SA",
+                         "nome":  "CVC Brasil Operadora e Agência de Viagens S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  3682869000,
+                                           "patrimonioLiquido":  322905000,
+                                           "lucroLiquidoLTM":  -131925000,
+                                           "receitaLTM":  1474999000,
+                                           "cpvLTM":  35724000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -0.409,
+                                            "roa":  -0.035821248102702513,
+                                            "gmar":  0.976
+                                        }
+                     },
+                     {
+                         "ticker":  "DXCO3.SA",
+                         "nome":  "Dexco S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  19086932000,
+                                           "patrimonioLiquido":  6923082000,
+                                           "lucroLiquidoLTM":  -36063000,
+                                           "receitaLTM":  8474588000,
+                                           "cpvLTM":  6294008000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -0.005,
+                                            "roa":  -0.0018894110620373136,
+                                            "gmar":  0.257
+                                        }
+                     },
+                     {
+                         "ticker":  "ECOR3.SA",
+                         "nome":  "EcoRodovias Infraestrutura e Logística S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  39586109000,
+                                           "patrimonioLiquido":  4113688000,
+                                           "lucroLiquidoLTM":  546121000,
+                                           "receitaLTM":  11891030000,
+                                           "cpvLTM":  7566158000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.133,
+                                            "roa":  0.013795776800442579,
+                                            "gmar":  0.364
+                                        }
+                     },
+                     {
+                         "ticker":  "EGIE3.SA",
+                         "nome":  "Engie Brasil Energia S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  59005891000,
+                                           "patrimonioLiquido":  15012810000,
+                                           "lucroLiquidoLTM":  3959345000,
+                                           "receitaLTM":  13680975000,
+                                           "cpvLTM":  7189752000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.264,
+                                            "roa":  0.067100917026941376,
+                                            "gmar":  0.474
+                                        }
+                     },
+                     {
+                         "ticker":  "EMBJ3.SA",
+                         "nome":  "Embraer S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  67868149800,
+                                           "patrimonioLiquido":  17734805700,
+                                           "lucroLiquidoLTM":  2286129300,
+                                           "receitaLTM":  42745337100,
+                                           "cpvLTM":  35097391200
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.13,
+                                            "roa":  0.033990225422365947,
+                                            "gmar":  0.179
+                                        }
+                     },
+                     {
+                         "ticker":  "ENEV3.SA",
+                         "nome":  "Eneva S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  58091080000,
+                                           "patrimonioLiquido":  20355558000,
+                                           "lucroLiquidoLTM":  962659000,
+                                           "receitaLTM":  19136661000,
+                                           "cpvLTM":  14213681000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.047,
+                                            "roa":  0.016571540218725415,
+                                            "gmar":  0.257
+                                        }
+                     },
+                     {
+                         "ticker":  "ENGI4.SA",
+                         "nome":  "Energisa S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  86127637000,
+                                           "patrimonioLiquido":  19498569000,
+                                           "lucroLiquidoLTM":  1516835000,
+                                           "receitaLTM":  36131743000,
+                                           "cpvLTM":  27653812000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.078,
+                                            "roa":  0.017611427695651567,
+                                            "gmar":  0.247
+                                        }
+                     },
+                     {
+                         "ticker":  "FLRY3.SA",
+                         "nome":  "Fleury S.A.",
+                         "janela":  "2T2025–1T2026",
+                         "protocolo":  {
+                                           "totalAssets":  13325654000,
+                                           "patrimonioLiquido":  5182614000,
+                                           "lucroLiquidoLTM":  634757000,
+                                           "receitaLTM":  8499227000,
+                                           "cpvLTM":  6237242000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.13,
+                                            "roa":  0.051945864218018216,
+                                            "gmar":  0.271
+                                        }
+                     },
+                     {
+                         "ticker":  "GGBR4.SA",
+                         "nome":  "Gerdau S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  81972713000,
+                                           "patrimonioLiquido":  53544554000,
+                                           "lucroLiquidoLTM":  2249337000,
+                                           "receitaLTM":  69543739000,
+                                           "cpvLTM":  60430291000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.042,
+                                            "roa":  0.027290549170638518,
+                                            "gmar":  0.131
+                                        }
+                     },
+                     {
+                         "ticker":  "GOAU4.SA",
+                         "nome":  "Metalurgica Gerdau S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  82037333000,
+                                           "patrimonioLiquido":  19234771000,
+                                           "lucroLiquidoLTM":  794483000,
+                                           "receitaLTM":  69543739000,
+                                           "cpvLTM":  60430291000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.040999999999999995,
+                                            "roa":  0.00968441184680627,
+                                            "gmar":  0.131
+                                        }
+                     },
+                     {
+                         "ticker":  "GRND3.SA",
+                         "nome":  "Grendene S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  3822330000,
+                                           "patrimonioLiquido":  3211205000,
+                                           "lucroLiquidoLTM":  579415000,
+                                           "receitaLTM":  2361002000,
+                                           "cpvLTM":  1414977000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.18,
+                                            "roa":  0.15158685932402488,
+                                            "gmar":  0.446
+                                        }
+                     },
+                     {
+                         "ticker":  "JBSS32.SA",
+                         "nome":  "JBS N.V.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  45838376000,
+                                           "patrimonioLiquido":  8224302000,
+                                           "lucroLiquidoLTM":  1114513000,
+                                           "receitaLTM":  91168220000,
+                                           "cpvLTM":  80413522000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "statusinvest",
+                                            "coletadoEm":  null,
+                                            "roe":  null,
+                                            "roa":  null,
+                                            "gmar":  null
+                                        }
+                     },
+                     {
+                         "ticker":  "KLBN4.SA",
+                         "nome":  "Klabin S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  63678586000,
+                                           "patrimonioLiquido":  9486819000,
+                                           "lucroLiquidoLTM":  286351000,
+                                           "receitaLTM":  20688440000,
+                                           "cpvLTM":  14896228000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.059000000000000004,
+                                            "roa":  0.0088165726005282781,
+                                            "gmar":  0.28
+                                        }
+                     },
+                     {
+                         "ticker":  "LOGN3.SA",
+                         "nome":  "Log-In Logística Intermodal S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  3829132000,
+                                           "patrimonioLiquido":  1206606000,
+                                           "lucroLiquidoLTM":  137223000,
+                                           "receitaLTM":  3115330000,
+                                           "cpvLTM":  2712060000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.114,
+                                            "roa":  0.035836599958737364,
+                                            "gmar":  0.129
+                                        }
+                     },
+                     {
+                         "ticker":  "LREN3.SA",
+                         "nome":  "Lojas Renner S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  19107201000,
+                                           "patrimonioLiquido":  10367784000,
+                                           "lucroLiquidoLTM":  1493933000,
+                                           "receitaLTM":  15971509000,
+                                           "cpvLTM":  6070818000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.14400000000000002,
+                                            "roa":  0.078186756824652481,
+                                            "gmar":  0.62
+                                        }
+                     },
+                     {
+                         "ticker":  "MBRF3.SA",
+                         "nome":  "MBRF Global Foods Company S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  139184871000,
+                                           "patrimonioLiquido":  11383727000,
+                                           "lucroLiquidoLTM":  364839000,
+                                           "receitaLTM":  165853916000,
+                                           "cpvLTM":  145540250000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.032,
+                                            "roa":  0.0026212522901174697,
+                                            "gmar":  0.12300000000000001
+                                        }
+                     },
+                     {
+                         "ticker":  "MDIA3.SA",
+                         "nome":  "M. Dias Branco S.A. Indústria e Comércio de Alimentos",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  13060455000,
+                                           "patrimonioLiquido":  8486067000,
+                                           "lucroLiquidoLTM":  649200000,
+                                           "receitaLTM":  10421844000,
+                                           "cpvLTM":  7460303000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.077,
+                                            "roa":  0.049707055625741743,
+                                            "gmar":  0.327
+                                        }
+                     },
+                     {
+                         "ticker":  "MGLU3.SA",
+                         "nome":  "Magazine Luiza S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  35912356000,
+                                           "patrimonioLiquido":  11166703000,
+                                           "lucroLiquidoLTM":  88509000,
+                                           "receitaLTM":  38284194000,
+                                           "cpvLTM":  26843502000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.008,
+                                            "roa":  0.0024645804791659704,
+                                            "gmar":  0.299
+                                        }
+                     },
+                     {
+                         "ticker":  "NATU3.SA",
+                         "nome":  "Natura Cosméticos S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  27826002000,
+                                           "patrimonioLiquido":  12585520000,
+                                           "lucroLiquidoLTM":  -2656601000,
+                                           "receitaLTM":  21304530000,
+                                           "cpvLTM":  7296014000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -0.21100000000000002,
+                                            "roa":  -0.09547186084956516,
+                                            "gmar":  0.65799999999999992
+                                        }
+                     },
+                     {
+                         "ticker":  "ONCO3.SA",
+                         "nome":  "Oncoclínicas do Brasil Serviços Médicos S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  6604404000,
+                                           "patrimonioLiquido":  16457000,
+                                           "lucroLiquidoLTM":  -4169493000,
+                                           "receitaLTM":  4990341000,
+                                           "cpvLTM":  3627529000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -257.04200000000003,
+                                            "roa":  -0.64050330082974982,
+                                            "gmar":  0.273
+                                        }
+                     },
+                     {
+                         "ticker":  "PCAR3.SA",
+                         "nome":  "Companhia Brasileira De Distribuicao",
+                         "janela":  "2T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  15561000000,
+                                           "patrimonioLiquido":  409000000,
+                                           "lucroLiquidoLTM":  null,
+                                           "receitaLTM":  null,
+                                           "cpvLTM":  null
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -5.2029999999999994,
+                                            "roa":  -0.13675213675213677,
+                                            "gmar":  0.29
+                                        }
+                     },
+                     {
+                         "ticker":  "PETR4.SA",
+                         "nome":  "Petróleo Brasileiro S.A. - Petrobras",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  1266763779000,
+                                           "patrimonioLiquido":  476339316000,
+                                           "lucroLiquidoLTM":  131022755987,
+                                           "receitaLTM":  534106236383,
+                                           "cpvLTM":  263051389075
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.27699999999999997,
+                                            "roa":  0.10427983925192726,
+                                            "gmar":  0.506
+                                        }
+                     },
+                     {
+                         "ticker":  "PRIO3.SA",
+                         "nome":  "Prio S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  63510624000,
+                                           "patrimonioLiquido":  28214097000,
+                                           "lucroLiquidoLTM":  3872518674,
+                                           "receitaLTM":  21371374550,
+                                           "cpvLTM":  14238922151
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.13699999999999998,
+                                            "roa":  0.060917232713909177,
+                                            "gmar":  0.33399999999999996
+                                        }
+                     },
+                     {
+                         "ticker":  "RADL3.SA",
+                         "nome":  "Raia Drogasil S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  24822598000,
+                                           "patrimonioLiquido":  7290780000,
+                                           "lucroLiquidoLTM":  1342386000,
+                                           "receitaLTM":  46533850000,
+                                           "cpvLTM":  32435022000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.184,
+                                            "roa":  0.054079347046642981,
+                                            "gmar":  0.311
+                                        }
+                     },
+                     {
+                         "ticker":  "RAIL3.SA",
+                         "nome":  "Rumo S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  55135865000,
+                                           "patrimonioLiquido":  14469212000,
+                                           "lucroLiquidoLTM":  1227120000,
+                                           "receitaLTM":  14392211000,
+                                           "cpvLTM":  7797727000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.085,
+                                            "roa":  0.022256279483965982,
+                                            "gmar":  0.45799999999999996
+                                        }
+                     },
+                     {
+                         "ticker":  "RANI3.SA",
+                         "nome":  "Irani Papel e Embalagem S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  3930340000,
+                                           "patrimonioLiquido":  1433091000,
+                                           "lucroLiquidoLTM":  129452000,
+                                           "receitaLTM":  1691191000,
+                                           "cpvLTM":  1093274000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.09,
+                                            "roa":  0.032936590727519754,
+                                            "gmar":  0.354
+                                        }
+                     },
+                     {
+                         "ticker":  "RDOR3.SA",
+                         "nome":  "Rede D\u0027Or São Luiz S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  113232658000,
+                                           "patrimonioLiquido":  20733450000,
+                                           "lucroLiquidoLTM":  4822607000,
+                                           "receitaLTM":  57792339000,
+                                           "cpvLTM":  44462056000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.233,
+                                            "roa":  0.042590145982178342,
+                                            "gmar":  0.231
+                                        }
+                     },
+                     {
+                         "ticker":  "RENT3.SA",
+                         "nome":  "Localiza Rent a Car S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  90820332000,
+                                           "patrimonioLiquido":  27102546000,
+                                           "lucroLiquidoLTM":  3424267000,
+                                           "receitaLTM":  46353378000,
+                                           "cpvLTM":  34256209000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.126,
+                                            "roa":  0.037703795296866446,
+                                            "gmar":  0.261
+                                        }
+                     },
+                     {
+                         "ticker":  "SBSP3.SA",
+                         "nome":  "Companhia de Saneamento Básico do Estado de São Paulo - SABESP",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  119606768000,
+                                           "patrimonioLiquido":  45173828000,
+                                           "lucroLiquidoLTM":  8057036000,
+                                           "receitaLTM":  40874162000,
+                                           "cpvLTM":  23522970000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.17800000000000002,
+                                            "roa":  0.067221985335306461,
+                                            "gmar":  0.35700000000000004
+                                        }
+                     },
+                     {
+                         "ticker":  "SLCE3.SA",
+                         "nome":  "SLC Agrícola S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  19986941000,
+                                           "patrimonioLiquido":  5424477000,
+                                           "lucroLiquidoLTM":  388387000,
+                                           "receitaLTM":  12038414000,
+                                           "cpvLTM":  7019183000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.072000000000000008,
+                                            "roa":  0.019432078011097267,
+                                            "gmar":  0.305
+                                        }
+                     },
+                     {
+                         "ticker":  "SMFT3.SA",
+                         "nome":  "Smartfit Escola de Ginástica e Dança S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  21490311000,
+                                           "patrimonioLiquido":  6076855000,
+                                           "lucroLiquidoLTM":  686466000,
+                                           "receitaLTM":  8051568000,
+                                           "cpvLTM":  4573454000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.113,
+                                            "roa":  0.031943062684094685,
+                                            "gmar":  0.43200000000000005
+                                        }
+                     },
+                     {
+                         "ticker":  "SUZB3.SA",
+                         "nome":  "Suzano S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  171045775000,
+                                           "patrimonioLiquido":  49697893000,
+                                           "lucroLiquidoLTM":  8161441000,
+                                           "receitaLTM":  47825412000,
+                                           "cpvLTM":  34121378000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.16399999999999998,
+                                            "roa":  0.047757328437964056,
+                                            "gmar":  0.287
+                                        }
+                     },
+                     {
+                         "ticker":  "TAEE11.SA",
+                         "nome":  "Transmissora Aliança de Energia Elétrica S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  22700882000,
+                                           "patrimonioLiquido":  8070915000,
+                                           "lucroLiquidoLTM":  1625473000,
+                                           "receitaLTM":  4484395000,
+                                           "cpvLTM":  1759634000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.201,
+                                            "roa":  0.071603769013563343,
+                                            "gmar":  0.608
+                                        }
+                     },
+                     {
+                         "ticker":  "TGMA3.SA",
+                         "nome":  "Tegma Gestão Logística S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  1528312000,
+                                           "patrimonioLiquido":  994134000,
+                                           "lucroLiquidoLTM":  254011000,
+                                           "receitaLTM":  2505926000,
+                                           "cpvLTM":  2035950000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.256,
+                                            "roa":  0.16620384607834798,
+                                            "gmar":  0.188
+                                        }
+                     },
+                     {
+                         "ticker":  "TOTS3.SA",
+                         "nome":  "TOTVS S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  12994264000,
+                                           "patrimonioLiquido":  5457910000,
+                                           "lucroLiquidoLTM":  1425728000,
+                                           "receitaLTM":  6591677000,
+                                           "cpvLTM":  1923179000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.261,
+                                            "roa":  0.10971964630645745,
+                                            "gmar":  0.711
+                                        }
+                     },
+                     {
+                         "ticker":  "USIM5.SA",
+                         "nome":  "Usinas Siderúrgicas de Minas Gerais S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  35106656000,
+                                           "patrimonioLiquido":  20751154000,
+                                           "lucroLiquidoLTM":  -2320418000,
+                                           "receitaLTM":  24781692000,
+                                           "cpvLTM":  22348736000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  -0.11199999999999999,
+                                            "roa":  -0.066096215252359231,
+                                            "gmar":  0.098
+                                        }
+                     },
+                     {
+                         "ticker":  "VALE3.SA",
+                         "nome":  "Vale S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  457733433000,
+                                           "patrimonioLiquido":  194882397000,
+                                           "lucroLiquidoLTM":  10812843000,
+                                           "receitaLTM":  211416972000,
+                                           "cpvLTM":  137803506000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.053,
+                                            "roa":  0.022435904370987598,
+                                            "gmar":  0.349
+                                        }
+                     },
+                     {
+                         "ticker":  "VIVA3.SA",
+                         "nome":  "Vivara Participações S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  4880314000,
+                                           "patrimonioLiquido":  3184285000,
+                                           "lucroLiquidoLTM":  585834000,
+                                           "receitaLTM":  2839642000,
+                                           "cpvLTM":  null
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.184,
+                                            "roa":  0.12004094002225268,
+                                            "gmar":  0.706
+                                        }
+                     },
+                     {
+                         "ticker":  "VIVT3.SA",
+                         "nome":  "Telefônica Brasil S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  128914784000,
+                                           "patrimonioLiquido":  65629270000,
+                                           "lucroLiquidoLTM":  6598880000,
+                                           "receitaLTM":  61774050000,
+                                           "cpvLTM":  33959031000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.10099999999999999,
+                                            "roa":  0.051187836946825431,
+                                            "gmar":  0.45
+                                        }
+                     },
+                     {
+                         "ticker":  "WEGE3.SA",
+                         "nome":  "WEG S.A.",
+                         "janela":  "3T2025–2T2026",
+                         "protocolo":  {
+                                           "totalAssets":  46666431000,
+                                           "patrimonioLiquido":  18861411000,
+                                           "lucroLiquidoLTM":  6254051000,
+                                           "receitaLTM":  40130180000,
+                                           "cpvLTM":  26831757000
+                                       },
+                         "referencia":  {
+                                            "fonte":  "fundamentus",
+                                            "coletadoEm":  "2026-10-26",
+                                            "roe":  0.314,
+                                            "roa":  0.13736704400531166,
+                                            "gmar":  0.33
+                                        }
+                     }
+                 ]
+}

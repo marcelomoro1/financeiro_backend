@@ -1,0 +1,46 @@
+{
+  "name": "financeiro_backend",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx prisma/seed.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validar:duas-fontes": "tsx scripts/validar-statusinvest.ts",
+    "validar:legacy": "tsx scripts/legacy/validar-fundamentus.ts",
+    "validar:44": "tsx scripts/validar-44-duas-fontes.ts",
+    "fixture:gerar": "tsx scripts/gerar-fixture-validacao.ts",
+    "comparacao": "tsx scripts/comparacao-outubro-2026.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "SAD Fundamentalista - Backend",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "node-cron": "^4.6.0",
+    "prisma": "^5.22.0",
+    "yahoo-finance2": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.1.1",
+    "@types/node-cron": "^3.0.11",
+    "tsx": "^4.23.1",
+    "typescript": "5.5",
+    "vitest": "^5.0.0"
+  }
+}
