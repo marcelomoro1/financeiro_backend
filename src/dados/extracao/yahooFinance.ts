@@ -100,6 +100,10 @@ export async function syncEmpresas(): Promise<void> {
   }
 }
 
+// Data fixa para snapshots intraday: garante 1 registro por ticker (sobrescrito a cada sync)
+// em vez de acumular uma linha por execucao do cron de 5 minutos.
+export const INTRADAY_DATA_SENTINELA = new Date("1970-01-01T00:00:00.000Z");
+
 export async function syncCotacoes(): Promise<{ ticker: string; marketCap: number }[]> {
   const tickers = await prisma.empresa.findMany({ where: { ativa: true }, select: { ticker: true } });
   const atualizados: { ticker: string; marketCap: number }[] = [];
@@ -113,14 +117,12 @@ export async function syncCotacoes(): Promise<{ ticker: string; marketCap: numbe
         console.log(`  Cotacao ${ticker}: sem preco disponivel`);
         continue;
       }
-      const now = new Date();
-      now.setSeconds(0, 0);
-      // tipo "intraday": snapshot de preco atual. Fica separado da serie mensal para
-      // nao contaminar a janela do MOM2-12 nos primeiros dias do mes.
+      // tipo "intraday": snapshot de preco atual (sobrescrito a cada sync). Fica separado
+      // da serie mensal para nao contaminar a janela do MOM2-12 nos primeiros dias do mes.
       await prisma.cotacaoHistorica.upsert({
-        where: { ticker_data_tipo: { ticker, data: now, tipo: "intraday" } },
+        where: { ticker_data_tipo: { ticker, data: INTRADAY_DATA_SENTINELA, tipo: "intraday" } },
         update: { adjclose: preco },
-        create: { ticker, data: now, adjclose: preco, tipo: "intraday" },
+        create: { ticker, data: INTRADAY_DATA_SENTINELA, adjclose: preco, tipo: "intraday" },
       });
       // Cacheado em Empresa para o dashboard exibir preco/variacao em lote sem uma
       // segunda chamada ao Yahoo - regularMarketChangePercent ja vem nesta mesma quote().
@@ -133,6 +135,11 @@ export async function syncCotacoes(): Promise<{ ticker: string; marketCap: numbe
       console.log(`  Cotacao ${ticker}: ERRO - ${e.message?.substring(0, 80)}`);
     }
   }
+
+  // Limpeza defensiva: remove snapshots intraday antigos fora do padrao de substituicao.
+  await prisma.cotacaoHistorica.deleteMany({
+    where: { tipo: "intraday", data: { not: INTRADAY_DATA_SENTINELA } },
+  });
 
   return atualizados;
 }
