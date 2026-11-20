@@ -27,8 +27,15 @@ router.get("/ranking", async (_req, res: Response) => {
   // `distinct` traduz para DISTINCT ON no Postgres, devolvendo so a linha mais recente
   // de cada ticker. Carregar as tabelas inteiras e filtrar em memoria degrada a cada
   // rodada trimestral, que acrescenta 50 linhas novas em zscore_resultados.
+  //
+  // NAO filtrar por zQualidade aqui. O filtro parecia inofensivo ("so empresas com nota"),
+  // mas o DISTINCT ON e aplicado DEPOIS do WHERE: um ticker cuja linha mais recente tem
+  // zQualidade nulo (pilar incompleto na fonte) caia numa linha ANTIGA, e o painel passava
+  // a exibir o sinal congelado de uma rodada anterior como se fosse atual. Pior ainda,
+  // recalcularValorMomentoZScore grava o sinal sempre na linha mais recente (sem este
+  // filtro), entao a atualizacao ia para uma linha que o ranking nunca mostrava.
+  // Linha mais recente sempre, e nota ausente se exibe como ausente ("—" no frontend).
   const resultados = await prisma.zScoreResultado.findMany({
-    where: { zQualidade: { not: null } },
     orderBy: [{ ticker: "asc" }, { dataCalculo: "desc" }],
     distinct: ["ticker"],
     include: { empresa: true },

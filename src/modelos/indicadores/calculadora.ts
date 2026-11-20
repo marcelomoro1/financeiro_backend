@@ -1,6 +1,6 @@
 import { covariacao, desvioPadrao, variancia } from "../../shared/utils/estatistica";
 import prisma from "../../dados/armazenamento/prisma";
-import { fetchSerieDiaria, fetchSerieIbovespa, yahooFinance } from "../../dados/extracao/yahooFinance";
+import { fetchSerieDiaria, fetchSerieIbovespa, withRetry, yahooFinance } from "../../dados/extracao/yahooFinance";
 import {
   MIN_OBSERVACOES_BETA,
   MIN_OBSERVACOES_EVOL,
@@ -502,14 +502,22 @@ export async function calcularIndicadores(ticker: string): Promise<void> {
 
   const mom2 = await calcularMomentum2(ticker);
 
-  let marketCap = 0;
+  // `null` (nao 0) distingue "o Yahoo nao devolveu o valor de mercado" de "o valor e zero".
+  // Com `withRetry`, uma instabilidade pontual deixa de virar veredito de dado inexistente -
+  // esta chamada roda em loop para as 50 empresas (calcularIndicadoresTodos) e era a unica
+  // do projeto sem retry, portanto a mais exposta a rate limiting do Yahoo.
+  let marketCap: number | null = null;
   try {
-    const qm = await yahooFinance.quote(ticker);
-    marketCap = qm?.marketCap || 0;
-  } catch { /* usa 0 se falhar */ }
+    const qm = await withRetry(() => yahooFinance.quote(ticker));
+    marketCap = qm?.marketCap ?? null;
+  } catch {
+    console.log(`  [INDICADORES] ${ticker}: valor de mercado indisponivel (BE/ME preservado)`);
+  }
 
+  const marketCapValido = marketCap != null && marketCap > 0;
   const bookValueT6 = await resolveBookValueT6(ticker);
-  const beMe = bookValueT6 != null && marketCap ? calcBEME(bookValueT6, marketCap) : null;
+  // PL ausente em t-6 com valor de mercado em maos e ausencia real -> null (caso PCAR3).
+  const beMe = marketCapValido && bookValueT6 != null ? calcBEME(bookValueT6, marketCap!) : null;
 
   const crescimento = calcularCrescimentoPilar(anual);
   const bab = await calcBeta(ticker);
@@ -527,7 +535,6 @@ export async function calcularIndicadores(ticker: string): Promise<void> {
     lev: calcLEV(toNumber(balanco.totalDebt), toNumber(balanco.totalAssets)),
     bab,
     evol,
-    beMe,
     mom2,
     crescRoa: crescimento.roa,
     crescRoe: crescimento.roe,
@@ -536,14 +543,19 @@ export async function calcularIndicadores(ticker: string): Promise<void> {
     crescCfoa: crescimento.cfoa,
   };
 
+  // `beMe` fica fora de `dados` porque e o unico campo cuja ausencia pode ser falha de REDE,
+  // nao de dado. Os demais vem do banco: ausencia neles e real e deve sobrescrever a rodada
+  // anterior (regra do Bug 2 em projeto.md, preservada acima). Ja o BE/ME nao pode ser
+  // apagado so porque o Yahoo nao respondeu neste instante - no update ele e omitido, e o
+  // ultimo valor conhecido permanece. Em `create` nao ha o que preservar: vai como null.
   await prisma.indicadorCalculado.upsert({
     where: { ticker_dataReferencia: { ticker, dataReferencia: balanco.dataReferencia } },
-    update: dados,
-    create: { ticker, dataReferencia: balanco.dataReferencia, ...dados },
+    update: marketCapValido ? { ...dados, beMe } : dados,
+    create: { ticker, dataReferencia: balanco.dataReferencia, ...dados, beMe },
   });
 }
 
-export async function recalcularValorMomento(ticker: string, marketCap: number): Promise<void> {
+export async function recalcularValorMomento(ticker: string, marketCap: number | null): Promise<void> {
   // Roda a cada 5 minutos para as 50 empresas: basta localizar a linha de indicadores
   // do trimestre corrente, sem remontar a consolidacao LTM inteira.
   const maisRecente = await prisma.dadosTrimestrais.findFirst({
@@ -553,14 +565,30 @@ export async function recalcularValorMomento(ticker: string, marketCap: number):
   });
   if (!maisRecente) return;
 
-  const bookValueT6 = await resolveBookValueT6(ticker);
-  const beMe = bookValueT6 != null && marketCap ? calcBEME(bookValueT6, marketCap) : null;
+  // mom2 le apenas o banco (sem chamada ao Yahoo): nulo aqui e ausencia REAL, e por isso
+  // e sempre gravado - manter o valor anterior o exibiria como atual (Bug 2, projeto.md).
   const mom2 = await calcularMomentum2(ticker);
+  const dados: { beMe?: number | null; mom2: number | null } = { mom2 };
+
+  // O BE/ME e diferente: ele depende do marketCap, que vem da rede. A regra do TCC
+  // ("indicador ausente e melhor que indicador errado") pressupoe saber que o dado nao
+  // existe - e falha de leitura nao e isso. O Yahoo omite `marketCap` de forma
+  // intermitente, e gravar nulo nesse caso apagava a cada 5 minutos um BE/ME valido,
+  // derrubando o sinal de Valor e Momento da base inteira. Sem marketCap nao se afirma
+  // nada sobre o BE/ME neste ciclo: o campo fica de fora do update.
+  // Com marketCap em maos, PL ausente em t-6 e ausencia real e vai como nulo - e o caso
+  // documentado de PCAR3, que "sai do fator Valor porque realmente nao tem PL em t-6".
+  // `> 0` junto com o nulo: valor de mercado zerado nao existe para empresa listada, e
+  // leitura defeituosa - mesmo tratamento do campo ausente.
+  if (marketCap != null && marketCap > 0) {
+    const bookValueT6 = await resolveBookValueT6(ticker);
+    dados.beMe = bookValueT6 != null ? calcBEME(bookValueT6, marketCap) : null;
+  }
 
   try {
     await prisma.indicadorCalculado.update({
       where: { ticker_dataReferencia: { ticker, dataReferencia: maisRecente.dataReferencia } },
-      data: { beMe, mom2 },
+      data: dados,
     });
   } catch {
     // indicadores base do trimestre ainda nao foram calculados
@@ -573,6 +601,7 @@ export async function recalcularValorMomento(ticker: string, marketCap: number):
 export async function recalcularMomentoTodos(): Promise<void> {
   const empresas = await prisma.empresa.findMany({ where: { ativa: true } });
   let atualizados = 0;
+  let semSerie = 0;
 
   for (const e of empresas) {
     const maisRecente = await prisma.dadosTrimestrais.findFirst({
@@ -582,7 +611,12 @@ export async function recalcularMomentoTodos(): Promise<void> {
     });
     if (!maisRecente) continue;
 
+    // mom2 nulo aqui e ausencia REAL de dado: calcularMomentum2 so le o banco, sem chamar o
+    // Yahoo. Se as barras de t-2/t-12 nao estao na serie mensal, o indicador e desconhecido
+    // e precisa ser gravado como nulo - manter o valor da rodada anterior o exibiria como
+    // atual (regra do Bug 2 em projeto.md).
     const mom2 = await calcularMomentum2(e.ticker);
+    if (mom2 == null) semSerie++;
     try {
       await prisma.indicadorCalculado.update({
         where: { ticker_dataReferencia: { ticker: e.ticker, dataReferencia: maisRecente.dataReferencia } },
@@ -595,6 +629,9 @@ export async function recalcularMomentoTodos(): Promise<void> {
   }
 
   console.log(`[MOMENTO] MOM2-12 atualizado para ${atualizados} empresas`);
+  if (semSerie > 0) {
+    console.log(`[MOMENTO] ${semSerie} empresas sem barras de t-2/t-12 na serie mensal (MOM2-12 gravado como nulo)`);
+  }
 }
 
 const CAMPOS_INDICADORES = [
