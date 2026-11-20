@@ -371,20 +371,39 @@ function chaveMesDeslocado(d: Date, meses: number): string {
 // Indexar o array por posicao quebraria em silencio se o Yahoo omitisse a barra do
 // mes corrente: o calculo viraria P(t-3)/P(t-13) sem nenhum sinal.
 async function calcularMomentum2(ticker: string): Promise<number | null> {
-  const barras = await prisma.cotacaoHistorica.findMany({
+  const maisRecente = await prisma.cotacaoHistorica.findFirst({
     where: { ticker, tipo: "mensal", adjclose: { not: null } },
     orderBy: { data: "desc" },
-    take: 24,
+    select: { data: true },
   });
-  if (barras.length === 0) return null;
+  if (!maisRecente) return null;
+  const referencia = maisRecente.data;
 
+  // Janela delimitada por DATA, nao por contagem de linhas. Com `take: 24` o indicador
+  // dependia de haver uma unica linha por mes - e nao ha: o Yahoo data a barra do mes
+  // EM CURSO no ultimo pregao, nao no dia 1o, e cada sync num dia diferente gravava uma
+  // linha nova (a unique e [ticker, data, tipo]). As duplicatas consumiam a janela: em
+  // 19/11/2026 as 24 linhas de PETR4 cobriam apenas 11 meses, t-12 caiu fora, e o
+  // MOM2-12 ficou nulo nas 50 empresas - derrubando o sinal de Valor e Momento, que
+  // exige as duas pernas, sem registrar erro em lugar nenhum.
+  const inicio = new Date(Date.UTC(referencia.getUTCFullYear(), referencia.getUTCMonth() - 12, 1));
+  const barras = await prisma.cotacaoHistorica.findMany({
+    where: { ticker, tipo: "mensal", adjclose: { not: null }, data: { gte: inicio } },
+    orderBy: { data: "asc" },
+  });
+
+  // Ordem ASCENDENTE de proposito. Havendo mais de uma linha no mes, a datada no dia 1o
+  // e a definitiva - e a barra mensal do Yahoo, cujo adjclose e o fechamento do mes;
+  // as com data de pregao sao residuos de sync feito com o mes ainda em curso, e valem o
+  // preco daquele dia. Ascendente, a do dia 1o vem primeiro e o `!has` a preserva. Com
+  // `desc` o residuo ganhava: o P(t-2) de setembro/2026 vinha do dia 11, nao do
+  // fechamento - erro silencioso que existia mesmo quando o indicador "funcionava".
   const porMes = new Map<string, number>();
   for (const b of barras) {
     const chave = chaveMes(b.data);
     if (!porMes.has(chave) && b.adjclose != null) porMes.set(chave, b.adjclose);
   }
 
-  const referencia = barras[0].data;
   const p2 = porMes.get(chaveMesDeslocado(referencia, -2));
   const p12 = porMes.get(chaveMesDeslocado(referencia, -12));
   if (p2 == null || p12 == null) return null;

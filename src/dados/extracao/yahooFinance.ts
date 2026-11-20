@@ -254,6 +254,14 @@ export async function syncPontoIndice(simbolo = "^BVSP"): Promise<void> {
 }
 
 // Serie mensal usada pelo MOM2-12.
+//
+// A data de cada barra e normalizada para o primeiro dia do mes em UTC. O Yahoo entrega os
+// meses FECHADOS datados no dia 1o, mas a barra do mes EM CURSO vem datada no ultimo
+// pregao - e esse timestamp muda a cada dia. Como a unique e [ticker, data, tipo], gravar
+// `quote.date` cru fazia cada sync criar uma linha NOVA em vez de atualizar a do mes: em
+// novembro/2026 PETR4 acumulou 11 linhas do mesmo mes, o que encurtou a janela de leitura
+// do MOM2-12 e zerou o indicador na base inteira (ver calcularMomentum2). Normalizando, o
+// mes em curso sobrescreve a propria linha e a serie fica com exatamente 1 linha por mes.
 export async function syncCotacoesHistoricas(ticker: string): Promise<number> {
   try {
     const chart = await withRetry(() =>
@@ -263,10 +271,11 @@ export async function syncCotacoesHistoricas(ticker: string): Promise<number> {
     let gravadas = 0;
     for (const quote of chart.quotes) {
       if (!quote.date || quote.adjclose == null) continue;
+      const mes = new Date(Date.UTC(quote.date.getUTCFullYear(), quote.date.getUTCMonth(), 1));
       await prisma.cotacaoHistorica.upsert({
-        where: { ticker_data_tipo: { ticker, data: quote.date, tipo: "mensal" } },
+        where: { ticker_data_tipo: { ticker, data: mes, tipo: "mensal" } },
         update: { adjclose: quote.adjclose },
-        create: { ticker, data: quote.date, adjclose: quote.adjclose, tipo: "mensal" },
+        create: { ticker, data: mes, adjclose: quote.adjclose, tipo: "mensal" },
       });
       gravadas++;
     }
