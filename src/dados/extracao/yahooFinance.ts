@@ -100,13 +100,27 @@ export async function syncEmpresas(): Promise<void> {
   }
 }
 
-// Data fixa para snapshots intraday: garante 1 registro por ticker (sobrescrito a cada sync)
-// em vez de acumular uma linha por execucao do cron de 5 minutos.
-export const INTRADAY_DATA_SENTINELA = new Date("1970-01-01T00:00:00.000Z");
+// Snapshot intraday: 1 linha por ticker POR DIA, sobrescrita a cada ciclo de 5 minutos.
+// Antes acumulava uma linha por execucao (~14.400/dia, ~430 mil/mes - ver "Crescimento do
+// banco" em hospedagem.md); agora cai para 1/dia por ticker.
+//
+// A data NAO pode ser uma sentinela fixa: `simulacaoRoutes` une as series "mensal" e
+// "intraday" ordenando por `data` (simulacaoRoutes.ts:186-193) e usa `data.getTime()` no
+// eixo temporal (simulacaoRoutes.ts:278). Uma data fixa no passado faria o preco de HOJE
+// virar o primeiro ponto da serie historica.
+function inicioDoDiaUtc(): Date {
+  const d = new Date();
+  d.setUTCHours(0, 0, 0, 0);
+  return d;
+}
 
-export async function syncCotacoes(): Promise<{ ticker: string; marketCap: number }[]> {
+// Retencao dos snapshots intraday, conforme a politica sugerida em hospedagem.md secao 4.
+const INTRADAY_RETENCAO_DIAS = 90;
+
+export async function syncCotacoes(): Promise<{ ticker: string; marketCap: number | null }[]> {
   const tickers = await prisma.empresa.findMany({ where: { ativa: true }, select: { ticker: true } });
-  const atualizados: { ticker: string; marketCap: number }[] = [];
+  const atualizados: { ticker: string; marketCap: number | null }[] = [];
+  let semMarketCap = 0;
 
   for (const { ticker } of tickers) {
     await delay(DELAY_MS);
@@ -117,12 +131,13 @@ export async function syncCotacoes(): Promise<{ ticker: string; marketCap: numbe
         console.log(`  Cotacao ${ticker}: sem preco disponivel`);
         continue;
       }
-      // tipo "intraday": snapshot de preco atual (sobrescrito a cada sync). Fica separado
+      // tipo "intraday": snapshot de preco atual (sobrescrito ao longo do dia). Fica separado
       // da serie mensal para nao contaminar a janela do MOM2-12 nos primeiros dias do mes.
+      const hoje = inicioDoDiaUtc();
       await prisma.cotacaoHistorica.upsert({
-        where: { ticker_data_tipo: { ticker, data: INTRADAY_DATA_SENTINELA, tipo: "intraday" } },
+        where: { ticker_data_tipo: { ticker, data: hoje, tipo: "intraday" } },
         update: { adjclose: preco },
-        create: { ticker, data: INTRADAY_DATA_SENTINELA, adjclose: preco, tipo: "intraday" },
+        create: { ticker, data: hoje, adjclose: preco, tipo: "intraday" },
       });
       // Cacheado em Empresa para o dashboard exibir preco/variacao em lote sem uma
       // segunda chamada ao Yahoo - regularMarketChangePercent ja vem nesta mesma quote().
@@ -130,16 +145,37 @@ export async function syncCotacoes(): Promise<{ ticker: string; marketCap: numbe
         where: { ticker },
         data: { ultimoPreco: preco, variacaoDiaPercentual: quote?.regularMarketChangePercent ?? null },
       });
-      atualizados.push({ ticker, marketCap: quote?.marketCap || 0 });
+      // `?? null` em vez de `|| 0`: marketCap ausente e dado FALTANTE, nao valor zero.
+      // Degradar para 0 fazia o BE/ME ser calculado como nulo e, pior, gravado como nulo
+      // por cima do valor bom (ver recalcularValorMomento em calculadora.ts).
+      const marketCap = quote?.marketCap ?? null;
+      if (marketCap == null) semMarketCap++;
+      atualizados.push({ ticker, marketCap });
     } catch (e: any) {
       console.log(`  Cotacao ${ticker}: ERRO - ${e.message?.substring(0, 80)}`);
     }
   }
 
-  // Limpeza defensiva: remove snapshots intraday antigos fora do padrao de substituicao.
-  await prisma.cotacaoHistorica.deleteMany({
-    where: { tipo: "intraday", data: { not: INTRADAY_DATA_SENTINELA } },
-  });
+  // Um lote inteiro sem marketCap e sintoma de rate limiting do Yahoo (tipico de IP de
+  // datacenter - ver hospedagem.md secao 8.1), nao de dado realmente inexistente. Sem este
+  // log a perda era 100% silenciosa: so aparecia na tela, como sinal faltando.
+  if (semMarketCap > 0) {
+    console.log(`[COTACOES] ATENCAO: ${semMarketCap}/${atualizados.length} tickers sem marketCap`);
+  }
+
+  // Retencao dos snapshots intraday. Em try/catch proprio: uma falha de limpeza nao pode
+  // abortar a atualizacao de precos e Z-Scores do ciclo (o cron de 5 minutos tem um unico
+  // try/catch em volta de tudo - cronJobs.ts:91-101).
+  try {
+    const corte = inicioDoDiaUtc();
+    corte.setUTCDate(corte.getUTCDate() - INTRADAY_RETENCAO_DIAS);
+    const { count } = await prisma.cotacaoHistorica.deleteMany({
+      where: { tipo: "intraday", data: { lt: corte } },
+    });
+    if (count > 0) console.log(`[COTACOES] Retencao: ${count} snapshots intraday antigos removidos`);
+  } catch (e: any) {
+    console.log(`[COTACOES] Falha na retencao de snapshots intraday: ${e.message?.substring(0, 80)}`);
+  }
 
   return atualizados;
 }
