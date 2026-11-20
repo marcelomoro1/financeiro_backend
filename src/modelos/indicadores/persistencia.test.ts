@@ -11,9 +11,30 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // valendo para tudo que vem do banco. O BE/ME e a excecao: ele depende de uma leitura de
 // rede, e falha de rede nao e ausencia de dado.
 
+type Barra = { data: Date; adjclose: number | null; tipo: string };
+let serieMensal: Barra[] = [];
+
+// Reproduz o filtro `data.gte`, o `orderBy` e o `take` do Prisma. Sem isso o teste da
+// janela por data nao provaria nada: o mock devolveria a serie inteira independentemente
+// do que a consulta pediu, e o bug das duplicatas passaria batido.
+function consultarSerie(args: any): Barra[] {
+  let r = serieMensal.filter(b => b.adjclose != null);
+  const gte = args?.where?.data?.gte;
+  if (gte) r = r.filter(b => b.data.getTime() >= gte.getTime());
+  const dir = args?.orderBy?.data;
+  r = [...r].sort((a, b) =>
+    dir === "asc" ? a.data.getTime() - b.data.getTime() : b.data.getTime() - a.data.getTime()
+  );
+  if (args?.take) r = r.slice(0, args.take);
+  return r;
+}
+
 const prismaMock = {
   dadosTrimestrais: { findFirst: vi.fn(), findMany: vi.fn() },
-  cotacaoHistorica: { findMany: vi.fn() },
+  cotacaoHistorica: {
+    findFirst: vi.fn(async (args: any) => consultarSerie(args)[0] ?? null),
+    findMany: vi.fn(async (args: any) => consultarSerie(args)),
+  },
   indicadorCalculado: { update: vi.fn(), upsert: vi.fn() },
   empresa: { findMany: vi.fn() },
 };
@@ -32,9 +53,8 @@ const { recalcularValorMomento, calcularIndicadores } = await import("./calculad
 
 const DATA_REF = new Date("2026-09-30T00:00:00.000Z");
 
-// 24 barras mensais descendentes a partir de 2026-11: garante as chaves t-2 e t-12 que
-// calcularMomentum2 procura, para que o mom2 nao seja nulo por falta de serie.
-function barrasMensais() {
+// Serie saudavel: uma barra por mes, datada no dia 1o, cobrindo t-2 e t-12.
+function barrasMensais(): Barra[] {
   return Array.from({ length: 24 }, (_, i) => ({
     data: new Date(Date.UTC(2026, 10 - i, 1)),
     adjclose: 100 + i,
@@ -49,9 +69,52 @@ beforeEach(() => {
   prismaMock.dadosTrimestrais.findMany.mockResolvedValue([
     { dataReferencia: new Date("2026-03-31T00:00:00.000Z"), commonStockEquity: 1_000n, stockholdersEquity: 1_000n },
   ]);
-  prismaMock.cotacaoHistorica.findMany.mockResolvedValue(barrasMensais());
+  serieMensal = barrasMensais();
   prismaMock.indicadorCalculado.update.mockResolvedValue({});
   prismaMock.indicadorCalculado.upsert.mockResolvedValue({});
+});
+
+function mom2Gravado(): number | null {
+  return prismaMock.indicadorCalculado.update.mock.calls[0][0].data.mom2;
+}
+
+describe("calcularMomentum2 - leitura da serie mensal", () => {
+  it("sobrevive a duplicatas do mes corrente (incidente de 19/11/2026)", async () => {
+    // O Yahoo data a barra do mes EM CURSO no ultimo pregao, e cada sync gravava uma linha
+    // nova: PETR4 chegou a 11 linhas de novembro. Com a janela por contagem (`take: 24`),
+    // essas duplicatas cobriam apenas 11 meses distintos e t-12 caia fora da leitura.
+    serieMensal = [
+      ...[1, 3, 10, 11, 12, 13, 16, 17, 18, 19, 20].map(d => ({
+        data: new Date(Date.UTC(2026, 10, d)), adjclose: 300, tipo: "mensal",
+      })),
+      ...Array.from({ length: 23 }, (_, i) => ({
+        data: new Date(Date.UTC(2026, 9 - i, 1)), adjclose: 100 + i, tipo: "mensal",
+      })),
+    ];
+
+    await recalcularValorMomento("PETR4.SA", 500);
+
+    expect(mom2Gravado()).not.toBeNull();
+  });
+
+  it("usa a barra do dia 1o, nao o residuo de sync intra-mes, para o P(t-2)", async () => {
+    serieMensal = [
+      { data: new Date(Date.UTC(2026, 10, 19)), adjclose: 300, tipo: "mensal" }, // mes corrente
+      { data: new Date(Date.UTC(2026, 9, 1)), adjclose: 200, tipo: "mensal" },
+      // t-2 = 2026-09: o dia 1o traz o fechamento do mes; o dia 11 e residuo
+      { data: new Date(Date.UTC(2026, 8, 1)), adjclose: 100, tipo: "mensal" },
+      { data: new Date(Date.UTC(2026, 8, 11)), adjclose: 999, tipo: "mensal" },
+      ...Array.from({ length: 9 }, (_, i) => ({
+        data: new Date(Date.UTC(2026, 7 - i, 1)), adjclose: 90 - i, tipo: "mensal",
+      })),
+      { data: new Date(Date.UTC(2025, 10, 1)), adjclose: 50, tipo: "mensal" }, // t-12
+    ];
+
+    await recalcularValorMomento("PETR4.SA", 500);
+
+    // 100/50 - 1 = 1. Com o residuo vencendo seria 999/50 - 1 = 18,98.
+    expect(mom2Gravado()).toBeCloseTo(1, 10);
+  });
 });
 
 describe("recalcularValorMomento - persistencia do BE/ME", () => {
@@ -87,7 +150,9 @@ describe("recalcularValorMomento - persistencia do BE/ME", () => {
   });
 
   it("segue gravando o MOM2-12 nulo quando a serie mensal nao tem t-2/t-12", async () => {
-    prismaMock.cotacaoHistorica.findMany.mockResolvedValue([]);
+    // Ausencia REAL de dado (o indicador le so o banco, sem rede): grava nulo em vez de
+    // preservar o valor anterior, conforme a regra do Bug 2 em projeto.md.
+    serieMensal = [{ data: new Date(Date.UTC(2026, 10, 1)), adjclose: 300, tipo: "mensal" }];
 
     await recalcularValorMomento("PETR4.SA", 500);
 
